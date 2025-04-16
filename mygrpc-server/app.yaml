@@ -1,0 +1,37 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mygrpc-server
+  labels:
+    app: mygrpc-server
+spec:
+  type: ClusterIP
+  selector:
+    app: mygrpc-server
+  ports:
+    - name: tcp
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: mygrpc-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mygrpc-server
+  template:
+    metadata:
+      labels:
+        app: mygrpc-server
+        version: v1
+    spec:
+      containers:
+      - name: mygrpc-server
+        image: mygrpc-server
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
